@@ -1,0 +1,13 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: keycloak-dashboard
+spec:
+  entryPoints:
+    - web
+  routes:
+  - match: Host(`keycloak.test`)
+    kind: Rule
+    services:
+    - name: phxwi-kc-service 
+      port: 8080

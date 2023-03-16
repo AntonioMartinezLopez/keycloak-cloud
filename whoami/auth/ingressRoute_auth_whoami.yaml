@@ -1,0 +1,27 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: whoami-oauth2-redirect
+spec:
+  entryPoints:
+    - web
+  routes:
+  - match: "Host(`oauth.whoami.test`) && PathPrefix(`/`)"
+    kind: Rule
+    services:
+    - name: whoami-oauth2-proxy
+      port: 80
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: whoami-oauth2-ingress
+spec:
+  entryPoints:
+    - web
+  routes:
+  - match: "Host(`whoami.test`) && PathPrefix(`/oauth2/`)"
+    kind: Rule
+    services:
+    - name: whoami-oauth2-proxy
+      port: 80

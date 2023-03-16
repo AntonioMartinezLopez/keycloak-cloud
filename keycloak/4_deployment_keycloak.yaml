@@ -1,0 +1,35 @@
+apiVersion: k8s.keycloak.org/v2alpha1
+kind: Keycloak
+metadata:
+  name: phxwi-kc
+spec:
+  instances: 1
+  db:
+    vendor: postgres
+    host: postgres
+    usernameSecret:
+      name: keycloak-db-secret
+      key: username
+    passwordSecret:
+      name: keycloak-db-secret
+      key: password
+  http:
+    httpEnabled: true
+    httpPort: 8080
+  hostname:
+    hostname: keycloak.test
+    strict: false
+    strictBackchannel: false
+  ingress:
+    enabled: false
+  additionalOptions:
+    - name: proxy
+      value: edge
+    - name:  hostname-strict-https
+      value: "false"
+    - name: keycloak-admin
+      value: admin
+    - name: keycloak-admin-password
+      value: password
+    - name: cache
+      value: local

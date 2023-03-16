@@ -1,0 +1,13 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: traefik-ingress
+spec:
+  entryPoints:
+    - web
+  routes:
+  - match: Host(`traefik.test`)
+    kind: Rule
+    services:
+    - name: traefik-dashboard-service
+      port: 9000
