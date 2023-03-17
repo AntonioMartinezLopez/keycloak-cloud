@@ -3,7 +3,13 @@ Install minikube, kubectl and HELM 3
 
 add following host to /etc/hosts
 
-'< minikube ip > oauth.whoami.test whoami.test keycloak.test k8s-dashboard.test'
+'< minikube ip > oauth.traefik.test traefik.test oauth.whoami.test whoami.test keycloak.test oauth.kubernetes.test kubernetes.test'
+
+kubernetes dashboard: 
+```bash
+minikube dashboard
+```
+
 
 ## STEP 2 - setup traefik ##
 
@@ -30,6 +36,11 @@ or
 
 ```bash
 kubectl port-forward -n traefik traefik-XXXXXXXXX-XXXXX 9000:9000
+```
+
+initially:
+```bash
+helm repo add oauth2-proxy https://oauth2-proxy.github.io/manifests
 ```
 
 
@@ -90,85 +101,47 @@ kubectl create -f whoami/auth/ingressRoute_auth_whoami.yaml -n auth
 
 
 
+## STEP 5 - protect traefik dashboard
 
-
-
-
-
-
-
-
-
-
-
-
-
-## STEP 3 ##
-add ingressroutes to minikube dashboard
+secure application : create realm for admin ( is also used later for kubernetes dashboard)
 ```bash
-kubectl create -f ingressRoute_dashboard.yaml -n kubernetes-dashboard
-kubectl create -f service_dashboard.yaml -n kubernetes-dashboard
+kubectl apply -f traefik/auth/realm_admin.yaml -n auth
 ```
+wait for approx. 5 min until migration job has finished
 
-## STEP 4 ##
-add following host to /etc/hosts
 
-'<minikube ip>  test.example.com whoami.com'
-
-## STEP 5 ##
-
-install app1 (ngninx)
-```bash
-kubectl create ns app1
-kubectl create -f deployment_app1.yaml -f service_app1.yaml -f ingressRoute_app1.yaml -n app1
-```
-curl or browse 'test.example.com', the default nginx page should be shown
-
-## STEP 6 ##
-
-install whoami service
+build oauth2 proxy for given realm
 
 ```bash
-kubectl create ns whoami
-kubectl create -f traefik-whoami.yaml -n whoami
+helm install traefik-oauth2-proxy oauth2-proxy/oauth2-proxy -f traefik/auth/values.yaml --namespace=auth
+kubectl create -f traefik/auth/ingressRoute_auth_traefik.yaml -n auth
 ```
 
-curl or browse 'whoami/notsl', the default nginx page should be shown
-
-## STEP 7 ##
-
-install keycloak
-
-first, install postgres:
+add ingress with forward auth middleware for traefik dashboard
 ```bash
-kubectl create ns auth
-kubectl apply -f pv_postgres.yaml 
-kubectl apply -f pvc_postgres.yaml -n auth 
-kubectl apply -f configMap_postgres.yaml -n auth
-kubectl apply -f deployment_postgres.yaml -n auth
+kubectl create -f traefik/ingressRoute_dashboard.yaml -n traefik
 ```
 
-then, install keycloak operator and a keycloak deployment
+- browse 'traefik.test/dashboard/', a keycloak login should appear
+- Login in with user: admin and pw:admin
+- the traefik dashboard should now be visible
+- logout with following link: http://traefik.test/oauth2/sign_out?rd=http%3A%2F%2Fkeycloak.test%2Frealms%2Fadmin%2Fprotocol%2Fopenid-connect%2Flogout
+
+
+## STEP 6 - protect kubernetes dashboard
+
+build oauth2 proxy for given realm (admin)
+
 ```bash
-kubectl create -f 0_keycloaks.k8s.keycloak.org-v1.yaml -n auth
-kubectl create -f 1_keycloakrealmimports.k8s.keycloak.org-v1.yaml -n auth
-kubectl create -f 2_deployment_keycloak_operator.yaml -n auth
-kubectl create -f 3_secret_keycloak.yaml -n auth
-kubectl create -f 4_deployment_keycloak.yaml -n auth
+helm install kubernetes-oauth2-proxy oauth2-proxy/oauth2-proxy -f kubernetes-dashboard/auth/values.yaml --namespace=auth
+kubectl create -f kubernetes-dashboard/auth/ingressRoute_auth_kubernetes.yaml -n auth
 ```
-
-from kubernetes dashboard, read the auto-set admin password from the environmental variables within the keycloak deployment.
-This password is used to log in to the admin console.
-
-
-## STEP 8 ##
-
-install Oauth2 proxy for every application
-
-initially:
+add ingress with forward auth middleware for kubernetes dashboard
 ```bash
-helm repo add oauth2-proxy https://oauth2-proxy.github.io/manifests
+kubectl create -f kubernetes-dashboard/ingressRoute_dashboard.yaml -n kubernetes-dashboard
 ```
 
-and then per application
-helm install my-release oauth2-proxy/oauth2-proxy -n <namespace>
+- browse 'kubernetes.test', a keycloak login should appear
+- Login in with user: admin and pw:admin
+- the kubernetes dashboard should now be visible
+- logout with following link: http://kubernetes.test/oauth2/sign_out?rd=http%3A%2F%2Fkeycloak.test%2Frealms%2Fadmin%2Fprotocol%2Fopenid-connect%2Flogout

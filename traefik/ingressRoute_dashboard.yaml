@@ -7,7 +7,22 @@ spec:
     - web
   routes:
   - match: Host(`traefik.test`)
+    middlewares:
+    - name: traefik-oauth-redirect
     kind: Rule
     services:
     - name: traefik-dashboard-service
       port: 9000
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: traefik-oauth-redirect
+spec:
+  forwardAuth:
+    address: http://oauth.traefik.test/
+    trustForwardHeader: true
+    authResponseHeaders:
+      - X-Auth-Request-Access-Token
+      - Authorization
+      - X-Auth-Request-Redirect
