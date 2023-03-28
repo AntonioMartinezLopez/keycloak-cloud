@@ -1,0 +1,31 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: traefik-oauth2-redirect
+spec:
+  entryPoints:
+    - websecure
+  routes:
+  - match: "Host(`oauth.traefik.test`) && PathPrefix(`/`)"
+    kind: Rule
+    services:
+    - name: traefik-oauth2-proxy
+      port: 80
+  tls:
+    secretName: traefik-dashboard-secret
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: traefik-oauth2-ingress
+spec:
+  entryPoints:
+    - websecure
+  routes:
+  - match: "Host(`traefik.test`) && PathPrefix(`/oauth2/`)"
+    kind: Rule
+    services:
+    - name: traefik-oauth2-proxy
+      port: 80
+  tls:
+    secretName: traefik-dashboard-secret

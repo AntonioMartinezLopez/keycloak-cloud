@@ -6,7 +6,7 @@ spec:
   entryPoints:
     - web
   routes:
-  - match: "Host(`oauth.traefik.test`) && PathPrefix(`/`)"
+  - match: "Host(`oauth.traefik2.test`) && PathPrefix(`/`)"
     kind: Rule
     services:
     - name: traefik-oauth2-proxy
@@ -20,7 +20,7 @@ spec:
   entryPoints:
     - web
   routes:
-  - match: "Host(`traefik.test`) && PathPrefix(`/oauth2/`)"
+  - match: "Host(`traefik2.test`) && PathPrefix(`/oauth2/`)"
     kind: Rule
     services:
     - name: traefik-oauth2-proxy

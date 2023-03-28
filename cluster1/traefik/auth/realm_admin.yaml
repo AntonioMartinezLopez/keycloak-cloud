@@ -600,9 +600,13 @@ spec:
         # change
         redirectUris:
           - http://traefik.test/oauth2/callback
+          - https://traefik.test/oauth2/callback
+          - https://traefik2.test/oauth2/callback
         # change
         webOrigins:
           - http://traefik.test
+          - https://traefik.test
+          - https://traefik2.test
         notBefore: 0
         bearerOnly: false
         consentRequired: false
@@ -674,9 +678,13 @@ spec:
         # change
         redirectUris:
           - http://kubernetes.test/oauth2/callback
+          - https://kubernetes.test/oauth2/callback
+          - https://kubernetes2.test/oauth2/callback
         # change
         webOrigins:
           - http://kubernetes.test
+          - https://kubernetes.test
+          - https://kubernetes2.test
         notBefore: 0
         bearerOnly: false
         consentRequired: false

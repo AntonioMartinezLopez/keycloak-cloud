@@ -76,15 +76,18 @@ image:
 
 extraArgs:
   - --provider=keycloak-oidc
-  - --redirect-url=http://traefik.test/oauth2/callback
-  - --oidc-issuer-url=http://phxwi-kc-service.auth.svc.cluster.local:8080/realms/admin
+  - --redirect-url=https://traefik.test/oauth2/callback
+  - --oidc-issuer-url=https://keycloak.test/realms/admin
   - --upstream=static://202
   - --reverse-proxy=true
   - --cookie-secure=false
   - --insecure-oidc-skip-issuer-verification=true
   - --skip-provider-button=true
   - --whitelist-domain=.keycloak.test
-  # - --skip-oidc-discovery=true
+  # for dev
+  - --ssl-insecure-skip-verify=true
+  - --ssl-upstream-insecure-skip-verify=true
+#  - --skip-oidc-discovery=true
 extraEnv: []
 
 # -- Custom labels to add into metadata

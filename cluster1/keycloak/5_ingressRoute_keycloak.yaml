@@ -4,10 +4,12 @@ metadata:
   name: keycloak-dashboard
 spec:
   entryPoints:
-    - web
+    - websecure
   routes:
   - match: Host(`keycloak.test`)
     kind: Rule
     services:
     - name: phxwi-kc-service 
       port: 8080
+  tls:
+    secretName: keycloak-dashboard-secret

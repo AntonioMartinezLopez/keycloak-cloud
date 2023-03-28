@@ -1,26 +1,26 @@
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: kubernetes-dashboard
+  name: traefik-ingress
 spec:
   entryPoints:
     - web
   routes:
-  - match: Host(`kubernetes.test`)
+  - match: Host(`traefik2.test`)
     middlewares:
-    - name: kubernetes-oauth-redirect
+    - name: traefik-oauth-redirect
     kind: Rule
     services:
-    - name: kubernetes-dashboard
-      port: 80
+    - name: traefik-dashboard-service
+      port: 9000
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
-  name: kubernetes-oauth-redirect
+  name: traefik-oauth-redirect
 spec:
   forwardAuth:
-    address: http://oauth.kubernetes.test/
+    address: http://oauth.traefik2.test
     trustForwardHeader: true
     authResponseHeaders:
       - X-Auth-Request-Access-Token
