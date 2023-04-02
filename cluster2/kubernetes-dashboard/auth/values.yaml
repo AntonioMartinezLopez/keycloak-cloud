@@ -76,7 +76,7 @@ image:
 
 extraArgs:
   - --provider=keycloak-oidc
-  - --redirect-url=http://kubernetes.test/oauth2/callback
+  - --redirect-url=http://kubernetes2.test/oauth2/callback
   - --oidc-issuer-url=https://keycloak.test/realms/admin
   - --upstream=static://202
   - --reverse-proxy=true

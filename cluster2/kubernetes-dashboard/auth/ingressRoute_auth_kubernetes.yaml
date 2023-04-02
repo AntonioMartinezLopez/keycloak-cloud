@@ -6,7 +6,7 @@ spec:
   entryPoints:
     - web
   routes:
-  - match: "Host(`oauth.kubernetes.test`) && PathPrefix(`/`)"
+  - match: "Host(`oauth.kubernetes2.test`) && PathPrefix(`/`)"
     kind: Rule
     services:
     - name: kubernetes-oauth2-proxy
@@ -20,7 +20,7 @@ spec:
   entryPoints:
     - web
   routes:
-  - match: "Host(`kubernetes.test`) && PathPrefix(`/oauth2/`)"
+  - match: "Host(`kubernetes2.test`) && PathPrefix(`/oauth2/`)"
     kind: Rule
     services:
     - name: kubernetes-oauth2-proxy

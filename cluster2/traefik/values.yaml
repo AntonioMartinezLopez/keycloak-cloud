@@ -485,6 +485,8 @@ tracing: {}
 globalArguments:
   - "--global.checknewversion"
   - "--global.sendanonymoususage"
+  # for test development
+  - "--serverstransport.insecureskipverify=true"
 
 #
 # Configure Traefik static configuration

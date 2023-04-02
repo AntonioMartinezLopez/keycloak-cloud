@@ -6,13 +6,13 @@ spec:
   entryPoints:
     - web
   routes:
-  - match: Host(`kubernetes.test`)
+  - match: Host(`kubernetes2.test`)
     middlewares:
     - name: kubernetes-oauth-redirect
     kind: Rule
     services:
     - name: kubernetes-dashboard
-      port: 80
+      port: 443
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
@@ -20,7 +20,7 @@ metadata:
   name: kubernetes-oauth-redirect
 spec:
   forwardAuth:
-    address: http://oauth.kubernetes.test
+    address: http://oauth.kubernetes2.test
     trustForwardHeader: true
     authResponseHeaders:
       - X-Auth-Request-Access-Token

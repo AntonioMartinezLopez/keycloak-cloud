@@ -1,7 +1,7 @@
 ## STEP 1 ##
 Install minikube, kubectl and HELM 3
 
-minikube start -p cluster2 --extra-config=apiserver.authorization-mode=Node,RBAC --extra-config=apiserver.oidc-issuer-url=https://keycloak.test/realms/admin --extra-config=apiserver.oidc-username-claim=email --extra-config=apiserver.oidc-client-id=kubernetes-oauth2-proxy --extra-config=apiserver.oidc-groups-prefix=keycloak: --extra-config=apiserver.oidc-username-prefix=keycloak: --extra-config=apiserver.oidc-groups-claim=groups --driver=virtualbox
+minikube start -p cluster2 --extra-config=apiserver.authorization-mode=Node,RBAC --extra-config=apiserver.oidc-issuer-url=https://keycloak.test/realms/admin --extra-config=apiserver.oidc-username-claim=email --extra-config=apiserver.oidc-client-id=kubernetes-oauth2-proxy --extra-config=apiserver.oidc-groups-prefix=keycloak: --extra-config=apiserver.oidc-username-prefix=keycloak: --extra-config=apiserver.oidc-groups-claim=groups --driver=kvm2 --network cl
 
 
 add following host to /etc/hosts
@@ -10,7 +10,7 @@ add following host to /etc/hosts
 
 kubernetes dashboard: 
 ```bash
-minikube dashboard
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/aio/deploy/recommended.yaml
 ```
 
 
@@ -161,7 +161,7 @@ kubectl create -f kubernetes-dashboard/ingressRoute_dashboard.yaml -n kubernetes
 
 
 ```bash
-minikube start -p cluster1
+minikube start -p cluster1 --driver=virtualbox
 
 cd test-cluster/cluster1
 
@@ -170,6 +170,21 @@ minikube ip -p cluster1
 
 ```
 
+## traefik
+---
+
+### install traefik helm chart
+
+```bash
+helm install traefik traefik/traefik --version 21.1.0 --namespace traefik --values ./traefik/values.yaml --create-namespace
+kubectl create -f traefik/service_dashboard.yaml -n traefik
+```
+### create self signed certificate for testing
+
+```bash
+openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 -nodes -keyout tls-traefik.key -out tls-traefik.crt -subj "/CN=traefik.test" -addext "subjectAltName=DNS:oauth.traefik.test,DNS:traefik.test,DNS:www.traefik.test,IP:192.168.39.135"
+kubectl create secret generic traefik-dashboard-secret --from-file=tls.crt=./tls-traefik.crt --from-file=tls.key=./tls-traefik.key --namespace traefik
+```
 
 ## keycloak
 ---
@@ -209,21 +224,8 @@ kubectl create -f keycloak/5_ingressRoute_keycloak.yaml -n auth
 ```
 
 
-## traefik
----
 
-### install traefik helm chart
 
-```bash
-helm install traefik traefik/traefik --version 21.1.0 --namespace traefik --values ./traefik/values.yaml --create-namespace
-kubectl create -f traefik/service_dashboard.yaml -n traefik
-```
-### create self signed certificate for testing
-
-```bash
-openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 -nodes -keyout tls-traefik.key -out tls-traefik.crt -subj "/CN=traefik.test" -addext "subjectAltName=DNS:oauth.traefik.test,DNS:traefik.test,DNS:www.traefik.test,IP:192.168.39.135"
-kubectl create secret generic traefik-dashboard-secret --from-file=tls.crt=./tls-traefik.crt --from-file=tls.key=./tls-traefik.key --namespace traefik
-```
  
 ## protect traefik dashboard
 ---
@@ -254,3 +256,6 @@ kubectl create -f traefik/auth/ingressRoute_auth_traefik.yaml -n auth
 - Login in with user: admin and pw:admin
 - the traefik dashboard should now be visible
 - logout with following link: https://traefik.test/oauth2/sign_out?rd=https%3A%2F%2Fkeycloak.test%2Frealms%2Fadmin%2Fprotocol%2Fopenid-connect%2Flogout
+
+
+
