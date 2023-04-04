@@ -87,8 +87,6 @@ extraArgs:
   - --pass-authorization-header=true
   - --set-authorization-header=true
   - --email-domain=*
-  - --allowed-role=admin
-  - --allowed-role=developer
 
   # for dev
   - --ssl-insecure-skip-verify=true

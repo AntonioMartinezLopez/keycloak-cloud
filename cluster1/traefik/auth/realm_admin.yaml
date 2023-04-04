@@ -267,13 +267,21 @@ spec:
     #         composite: false
     #         clientRole: true
     #         attributes: {}
-    # groups:
-    #   - name: app1
-    #     path: /app1
-    #     attributes: {}
-    #     realmRoles: []
-    #     clientRoles: {}
-    #     subGroups: []
+    groups:
+      - id: c1170b17-787b-4a45-a302-a5756b21852a
+        name: admin
+        path: /admin
+        attributes: {}
+        realmRoles: []
+        clientRoles: {}
+        subGroups: []
+      - id: 98a0738a-a773-4ad1-8354-4da6b5273aa9
+        name: atsep
+        path: /atsep
+        attributes: {}
+        realmRoles: []
+        clientRoles: {}
+        subGroups: []
     defaultRole:
       # change
       name: default-roles-apptest
@@ -336,7 +344,25 @@ spec:
         # change
           - default-roles-apptest
         notBefore: 0
-        groups: []
+        groups:
+          - /admin
+      - username: atsep
+        enabled: true
+        totp: false
+        emailVerified: true
+        firstName: atsep
+        lastName: test
+        email: atsep@test.de
+        credentials:
+          - type: password
+            value: atsep
+        disableableCredentialTypes: []
+        requiredActions: []
+        realmRoles:
+          - default-roles-apptest
+        notBefore: 0
+        groups:
+          - /atsep
     scopeMappings:
       - clientScope: offline_access
         roles:
@@ -601,12 +627,12 @@ spec:
         redirectUris:
           - http://traefik.test/oauth2/callback
           - https://traefik.test/oauth2/callback
-          - https://traefik2.test/oauth2/callback
+          - http://traefik2.test/oauth2/callback
         # change
         webOrigins:
           - http://traefik.test
           - https://traefik.test
-          - https://traefik2.test
+          - http://traefik2.test
         notBefore: 0
         bearerOnly: false
         consentRequired: false
@@ -679,12 +705,12 @@ spec:
         redirectUris:
           - http://kubernetes.test/oauth2/callback
           - https://kubernetes.test/oauth2/callback
-          - https://kubernetes2.test/oauth2/callback
+          - http://kubernetes2.test/oauth2/callback
         # change
         webOrigins:
           - http://kubernetes.test
           - https://kubernetes.test
-          - https://kubernetes2.test
+          - http://kubernetes2.test
         notBefore: 0
         bearerOnly: false
         consentRequired: false
@@ -726,10 +752,10 @@ spec:
             consentRequired: false
             config:
               full.path: "false"
-              id.token.claim: "false"
-              access.token.claim: "false"
+              id.token.claim: "true"
+              access.token.claim: "true"
               claim.name: groups
-              userinfo.token.claim: "false"
+              userinfo.token.claim: "true"
         defaultClientScopes:
           - web-origins
           - acr

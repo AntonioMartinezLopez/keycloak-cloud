@@ -1,12 +1,12 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: developer-role-binding
+  name: atsep-role-binding
 subjects:
 - kind: Group
-  name: keycloak:developer
+  name: keycloak:atsep
   apiGroup: rbac.authorization.k8s.io
 roleRef:
   kind: ClusterRole
-  name: developer-clusterrole
+  name: atsep-clusterrole
   apiGroup: rbac.authorization.k8s.io
