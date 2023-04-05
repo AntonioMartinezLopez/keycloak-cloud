@@ -55,7 +55,7 @@ metadata:
   name: whoami-oauth-redirect
 spec:
   forwardAuth:
-    address: http://oauth.whoami.test/
+    address: http://oauth.whoami.test
     trustForwardHeader: true
     authResponseHeaders:
       - X-Auth-Request-Access-Token

@@ -203,7 +203,38 @@ kubectl create -f kubernetes-dashboard/ingressRoute_dashboard.yaml -n kubernetes
 - logout with following link: http://kubernetes2.test/oauth2/sign_out?rd=https%3A%2F%2Fkeycloak.test%2Frealms%2Fadmin%2Fprotocol%2Fopenid-connect%2Flogout
 
 
+# create new instance of an application (example whoami)
 
+switch to keycloak cluster and create realm
+
+```bash
+cd ../whoami
+minikube profile cluster1
+kubectl create -f auth/realm_whoami.yaml -n auth
+```
+
+wait 5 min until realm instance has been initialized
+
+switch back to customer cluster
+
+```bash
+minikube profile cluster2
+```
+
+initialize ingress and deployment
+
+```bash
+kubectl create ns whoami
+kubectl create -f traefik-whoami.yaml -n whoami
+kubectl create -f ingressRoute_auth_whoami.yaml -n whoami
+```
+
+
+install ouath2-proxy
+
+```bash
+helm install whoami-oauth2-proxy oauth2-proxy/oauth2-proxy -f values.yaml --namespace=whoami
+```
 
 # extract realm settings
 

@@ -325,10 +325,7 @@ spec:
         email: test@test.de
         credentials:
           - type: password
-            userLabel: My password
-            #createdDate: 1678809072357
-            secretData: '{"value":"EXKSqyzmqA0CgGLEff2DzWQ1jaJUq7SeFjwlYySIDbQ=","salt":"ThtLlWEaWJEKrXZEeRjcog==","additionalParameters":{}}'
-            credentialData: '{"hashIterations":27500,"algorithm":"pbkdf2-sha256","additionalParameters":{}}'
+            value: testuser
         disableableCredentialTypes: []
         requiredActions: []
         realmRoles:
