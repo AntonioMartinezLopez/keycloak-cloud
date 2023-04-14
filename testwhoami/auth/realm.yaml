@@ -1,13 +1,13 @@
 apiVersion: k8s.keycloak.org/v2alpha1
 kind: KeycloakRealmImport
 metadata:
-  name: whoami-realm-rc
+  name: testwhoami-realm-rc
 spec:
   keycloakCRName: phxwi-kc
   realm:
     #change
-    id: whoami
-    realm: whoami
+    id: testwhoami
+    realm: testwhoami
     # notBefore: 0
     # defaultSignatureAlgorithm: RS256
     # revokeRefreshToken: false
@@ -581,7 +581,7 @@ spec:
       #     - phone
       #     - offline_access
       #     - microprofile-jwt
-      - clientId: whoami-oauth2-proxy
+      - clientId: testwhoami-oauth2-proxy
         name: ""
         description: ""
         rootUrl: ""
@@ -595,10 +595,13 @@ spec:
         secret: 62CZFzirE2Yvs0m2CpuKBTv05r0MvjSu
         # change
         redirectUris:
-          - http://whoami.test/oauth2/callback
+          - http://testwhoami.test/oauth2/callback
+          # - http://whoami2.test/oauth2/callback
         # change
         webOrigins:
           - http://whoami.test
+          - http://whoami2.test
+          - http://testwhoami.test
         notBefore: 0
         bearerOnly: false
         consentRequired: false
@@ -625,13 +628,13 @@ spec:
         fullScopeAllowed: true
         nodeReRegistrationTimeout: -1
         protocolMappers:
-          - name: aud-mapper-whoami-oauth2-proxy
+          - name: aud-mapper-testwhoami-oauth2-proxy
             protocol: openid-connect
             protocolMapper: oidc-audience-mapper
             consentRequired: false
             config:
               # change
-              included.client.audience: whoami-oauth2-proxy
+              included.client.audience: testwhoami-oauth2-proxy
               id.token.claim: "true"
               access.token.claim: "true"
           - name: groups

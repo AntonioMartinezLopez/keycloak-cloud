@@ -1,0 +1,40 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: testwhoami-oauth-redirect
+spec:
+  forwardAuth:
+    address: http://oauth.testwhoami.test
+    trustForwardHeader: true
+    authResponseHeaders:
+      - X-Auth-Request-Access-Token
+      - Authorization
+      - X-Auth-Request-Redirect
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: whoami-oauth2-ingress
+spec:
+  entryPoints:
+    - web
+  routes:
+  - match: "Host(`testwhoami.test`) && PathPrefix(`/oauth2/`)"
+    kind: Rule
+    services:
+    - name: testwhoami-oauth2-proxy
+      port: 80
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: whoami-oauth2-redirect
+spec:
+  entryPoints:
+    - web
+  routes:
+  - match: "Host(`oauth.testwhoami.test`) && PathPrefix(`/`)"
+    kind: Rule
+    services:
+    - name: testwhoami-oauth2-proxy
+      port: 80

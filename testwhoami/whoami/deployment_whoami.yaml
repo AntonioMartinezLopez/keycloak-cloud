@@ -41,23 +41,10 @@ spec:
   entryPoints:
     - web
   routes:
-  - match: Host(`whoami.test`) && PathPrefix(`/notls`)
+  - match: Host(`whoami.testwhoami.test`) && PathPrefix(`/notls`)
     middlewares:
-      - name: whoami-oauth-redirect
+      - name: testwhoami-oauth-redirect
     kind: Rule
     services:
     - name: whoami
       port: 80
----
-apiVersion: traefik.containo.us/v1alpha1
-kind: Middleware
-metadata:
-  name: whoami-oauth-redirect
-spec:
-  forwardAuth:
-    address: http://oauth.whoami.test
-    trustForwardHeader: true
-    authResponseHeaders:
-      - X-Auth-Request-Access-Token
-      - Authorization
-      - X-Auth-Request-Redirect

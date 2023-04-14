@@ -8,7 +8,7 @@ config:
   # Add config annotations
   annotations: {}
   # OAuth client ID
-  clientID: "whoami-oauth2-proxy"
+  clientID: "testwhoami-oauth2-proxy"
   # OAuth client secret
   clientSecret: "62CZFzirE2Yvs0m2CpuKBTv05r0MvjSu"
   # Create a new secret with the following command
@@ -76,14 +76,17 @@ image:
 
 extraArgs:
   - --provider=keycloak-oidc
-  - --redirect-url=http://whoami.test/oauth2/callback
-  - --oidc-issuer-url=https://keycloak.test/realms/whoami
+  - --redirect-url=http://testwhoami.test/oauth2/callback
+  - --oidc-issuer-url=https://keycloak.test/realms/testwhoami
   - --upstream=static://202
   - --reverse-proxy=true
   - --cookie-secure=false
   - --insecure-oidc-skip-issuer-verification=true
   - --skip-provider-button=true
   - --whitelist-domain=.keycloak.test
+  - --whitelist-domain=.testwhoami.test
+  # - --whitelist-domain='.keycloak.test,.testwhoami.test'
+  - --cookie-domain=.testwhoami.test
   # for dev
   - --ssl-insecure-skip-verify=true
   - --ssl-upstream-insecure-skip-verify=true

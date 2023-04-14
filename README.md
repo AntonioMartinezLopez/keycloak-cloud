@@ -229,6 +229,8 @@ kubectl create -f traefik-whoami.yaml -n whoami
 kubectl create -f ingressRoute_auth_whoami.yaml -n whoami
 ```
 
+logout: http://testwhoami.test/oauth2/sign_out?rd=https%3A%2F%2Fkeycloak.test%2Frealms%2Ftestwhoami%2Fprotocol%2Fopenid-connect%2Flogout
+
 
 install ouath2-proxy
 
